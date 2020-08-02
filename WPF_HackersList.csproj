@@ -4,6 +4,15 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Burglar-02.ico</ApplicationIcon>
+    <RootNamespace>WPF_HackersList</RootNamespace>
+    <AssemblyName>Hackers</AssemblyName>
+    <Authors>Л.А.С</Authors>
+    <Product>Л.А.С</Product>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
