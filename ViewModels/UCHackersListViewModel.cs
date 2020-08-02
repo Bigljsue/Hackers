@@ -14,7 +14,6 @@ namespace WPF_HackersList.ViewModels
 {
     public class UCHackersListViewModel : Screen
     {
-
         private BindableCollection<PersonModel> _people { get; set; }
 
         public BindableCollection<PersonModel> People
@@ -28,7 +27,7 @@ namespace WPF_HackersList.ViewModels
         public string PersonName
         {
             get { return _personName; }
-            set { _personName = value; NotifyOfPropertyChange(() => PersonName); }
+            set { _personName = value; NotifyOfPropertyChange(() => PersonName); TextBoxPersonNameChanged(); }
         }
 
         private object _selectedItem;
@@ -39,7 +38,37 @@ namespace WPF_HackersList.ViewModels
             set { _selectedItem = value; NotifyOfPropertyChange(() => SelectedItem); }
         }
 
-        public void UpdatePeople()
+        private List<string> _filteredPeople;
+
+        public List<string> FilteredPeople
+        {
+            get { return _filteredPeople; }
+            set { _filteredPeople = value; NotifyOfPropertyChange(() => FilteredPeople); }
+        }
+
+        private int _filteredPeopleCount;
+
+        public string FilteredPeopleCount
+        {
+            get { return $"Найдено: {_filteredPeopleCount}"; }
+            set { _filteredPeopleCount = Convert.ToInt32(value); NotifyOfPropertyChange(() => FilteredPeopleCount); }
+        }
+
+
+        private bool _dropDownMenuOpened;
+
+        public bool DropDownMenuOpened
+        {
+            get { return _dropDownMenuOpened; }
+            set { _dropDownMenuOpened = value; NotifyOfPropertyChange(() => DropDownMenuOpened); }
+        }
+
+        public UCHackersListViewModel()
+        {
+            UpdateDataGrid();
+        }
+
+        public void UpdateDataGrid()
         {
             IDataBaseGetMethods DataBaseGetMethods = DependencyResolver.Resolve<IDataBaseGetMethods>();
             IDataBaseUpdateMethods DataBaseUpdateMethods = DependencyResolver.Resolve<IDataBaseUpdateMethods>();
@@ -61,7 +90,7 @@ namespace WPF_HackersList.ViewModels
             IDataBaseAddMethods DataBaseAddMethods = DependencyResolver.Resolve<IDataBaseAddMethods>();
 
             DataBaseAddMethods.AddPerson(PersonName);
-            UpdatePeople();
+            UpdateDataGrid();
         }
 
         public void RemovePerson()
@@ -77,7 +106,24 @@ namespace WPF_HackersList.ViewModels
             DataBaseDeleteMethods.DeletePerson(((PersonModel)SelectedItem).Id);
             SelectedItem = null;
 
-            UpdatePeople();
+            UpdateDataGrid();
+        }
+
+        public void TextBoxPersonNameChanged()
+        {
+            if (People != null)
+            {
+                if (String.IsNullOrWhiteSpace(PersonName))
+                {
+                    FilteredPeople = null;
+                    FilteredPeopleCount = null;
+                }
+                else
+                {
+                    FilteredPeople = People.Where(x => x.Name.Contains(PersonName, StringComparison.OrdinalIgnoreCase)).Select(x => x.Name).ToList();
+                    FilteredPeopleCount = FilteredPeople.Count.ToString();
+                }
+            }       
         }
     }
 }

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPF_HackersList.Views"
              mc:Ignorable="d" Background="Green" FontSize="19"
-             d:DesignHeight="450">
+             d:DesignHeight="450" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,11 +13,17 @@
         </Grid.RowDefinitions>
 
         <Grid>
-            <WrapPanel HorizontalAlignment="Stretch">
-                <TextBox Name="PersonName" MinWidth="400" HorizontalAlignment="Right" Margin="3" Padding="10,0,10,0" />
+            <WrapPanel>                
+                <StackPanel>
+                    <WrapPanel>
+                        <TextBlock Text="{Binding Path=FilteredPeopleCount}" Margin="3"/>
+                        <ComboBox Name="FilteredPeople" Text="{Binding Path=PersonName}" MinWidth="400" HorizontalAlignment="Right" 
+                              Margin="3" IsEditable="true"/>
+                    </WrapPanel>
+                </StackPanel>
                 <Button Name="AddPerson" Content="Добавить" MinHeight="30" HorizontalAlignment="Right" Margin="3" Padding="10,0,10,0"/>
                 <Button Name="RemovePerson" Content="Удалить" MinHeight="30" HorizontalAlignment="Right" Margin="3" Padding="10,0,10,0"/>
-                <Button Name="UpdatePeople" Content="Обновить список"  MinHeight="30" HorizontalAlignment="Right" Margin="3" Padding="10,0,10,0"/>
+                <Button Name="UpdateDataGrid" Content="Обновить список"  MinHeight="30" HorizontalAlignment="Right" Margin="3" Padding="10,0,10,0"/>
             </WrapPanel>
         </Grid>
 

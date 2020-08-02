@@ -10,6 +10,10 @@ namespace WPF_HackersList.ViewModels
 {
     public class ShellViewModel : Conductor<object>
     {
+        public ShellViewModel()
+        {
+            ActivateItem(new UCHackersListViewModel());
+        }
 
         public void LoadHackersListPage()
         {

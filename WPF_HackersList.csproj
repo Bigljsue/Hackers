@@ -9,6 +9,9 @@
     <AssemblyName>Hackers</AssemblyName>
     <Authors>Л.А.С</Authors>
     <Product>Л.А.С</Product>
+    <AssemblyVersion>1.1.0.1</AssemblyVersion>
+    <FileVersion>1.1.0.1</FileVersion>
+    <Version>1.1.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

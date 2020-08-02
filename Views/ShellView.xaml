@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_HackersList.Views"
         mc:Ignorable="d"
-        Title="Главное окно" Height="450" Width="800">
+        Title="Главное окно" Height="450" Width="900">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="125"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -16,10 +16,9 @@
             <Button 
             Name="LoadHackersListPage" 
             HorizontalAlignment="Center"
-            Margin="10,10,10,10"  
-            Padding="0,0,0,0" 
-            Width="90"
-            Height="80" >
+            Margin="10"  
+            Width="95"
+            Height="65" >
                 <Image Source="/Images/Hacker.png"/>
             </Button>
         </StackPanel>
