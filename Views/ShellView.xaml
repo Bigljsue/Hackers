@@ -20,7 +20,7 @@
             Width="95"
             Height="65" >
                 <Image Source="/Images/Hacker.png"/>
-            </Button>
+            </Button> 
         </StackPanel>
 
         <ContentControl Grid.Row="1" Grid.Column="1" Name="ActiveItem" MinWidth="400" MinHeight="400"/>
