@@ -46,17 +46,21 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
         public void UpdateChanges(List<PersonModel> people)
         {
             PersonModel dataBasePerson;
+            bool updatePerson = false;
 
             using (var dataBase = new DataBaseConfiguration())
             {
                 foreach (PersonModel person in people) 
                 {
                     dataBasePerson = dataBase.People.AsNoTracking().Where(x => x.Id == person.Id).FirstOrDefault();
-                    if (person.Name != dataBasePerson.Name)
+                    if (person.Name != dataBasePerson.Name)                    
+                        updatePerson = true;
+
+                    if (updatePerson == true)
                     {
                         dataBase.Update(person);
-                        dataBase.SaveChanges();
                     }
+                        dataBase.SaveChanges();                    
                 }
             }
         }

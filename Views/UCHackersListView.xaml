@@ -15,9 +15,9 @@
         <Grid>
             <WrapPanel>                
                 <StackPanel>
-                    <WrapPanel>
+                    <WrapPanel HorizontalAlignment="Right">
                         <TextBlock Text="{Binding Path=FilteredPeopleCount}" Margin="3"/>
-                        <ComboBox Name="FilteredPeople" Text="{Binding Path=PersonName}" MinWidth="400" HorizontalAlignment="Right" 
+                        <ComboBox Name="FilteredPeople" Text="{Binding Path=PersonName}" MinWidth="300"
                               Margin="3" IsEditable="true"/>
                     </WrapPanel>
                 </StackPanel>
