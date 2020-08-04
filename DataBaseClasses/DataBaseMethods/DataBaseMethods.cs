@@ -3,7 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using WPF_HackersList.Classes.DataBaseConfiguration;
+using System.Windows;
+using WPF_HackersList.DataBaseClasses;
 using WPF_HackersList.Models;
 
 namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
@@ -14,7 +15,7 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
         {
             List<PersonModel> people = new List<PersonModel>();
 
-            using (var dataBase = new DataBaseConfiguration())
+            using (var dataBase = new DataBaseConfiguration.DataBaseConfiguration())
                 people = dataBase.People.ToList();
 
             return people;
@@ -24,7 +25,18 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
         {
             PersonModel person = new PersonModel { Name = name };
 
-            using (var dataBase = new DataBaseConfiguration())
+            using (var dataBase = new DataBaseConfiguration.DataBaseConfiguration())
+            {
+                dataBase.Add(person);
+                dataBase.SaveChanges();
+            }
+        }
+
+        public void AddPerson(string name, string commentary)
+        {
+            PersonModel person = new PersonModel { Name = name, Comment = commentary};
+
+            using (var dataBase = new DataBaseConfiguration.DataBaseConfiguration())
             {
                 dataBase.Add(person);
                 dataBase.SaveChanges();
@@ -35,7 +47,7 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
         {
             PersonModel person;
 
-            using (var dataBase = new DataBaseConfiguration())
+            using (var dataBase = new DataBaseConfiguration.DataBaseConfiguration())
             {
                 person = dataBase.People.Where(x => x.Id == id).FirstOrDefault();
                 dataBase.Remove(person);
@@ -48,7 +60,7 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
             PersonModel dataBasePerson;
             bool updatePerson = false;
 
-            using (var dataBase = new DataBaseConfiguration())
+            using (var dataBase = new DataBaseConfiguration.DataBaseConfiguration())
             {
                 foreach (PersonModel person in people) 
                 {
@@ -65,6 +77,70 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
                     }
                         dataBase.SaveChanges();                    
                 }
+            }
+        }
+
+        public void ConnectToSecondDataBase(string secondDataBaseFullPath)
+        {
+            List<PersonModel> mainDataBaseList;
+            List<PersonModel> secondDataBaseList;
+            PersonModel newPerson;
+            int newId = 0;
+
+            try
+            {
+                using (var mainDataBase = new DataBaseConfiguration.DataBaseConfiguration())
+                {
+                    mainDataBaseList = mainDataBase.People.AsNoTracking().Select(x => x).ToList();
+                    newId = mainDataBaseList.Select(x => x).OrderBy(x => x.Id).Last().Id + 1;
+                    using (var secondDataBase = new DataBaseConfiguration.SecondDataBaseConfiguration(secondDataBaseFullPath))
+                    {
+                        secondDataBaseList = secondDataBase.People.Select(x => x).ToList();
+
+                        foreach (var mainPerson in mainDataBaseList)
+                        {
+                            foreach (var comparePerson in secondDataBaseList)
+                            {
+                                if (mainPerson.Name == comparePerson.Name)
+                                {
+                                    if (String.IsNullOrWhiteSpace(comparePerson.Comment))
+                                    {
+                                        newPerson = new PersonModel()
+                                        {
+                                            Id = mainPerson.Id,
+                                            Name = mainPerson.Name,
+                                            Comment = mainPerson.Comment
+                                        };
+                                    }
+                                    newPerson = new PersonModel()
+                                    {
+                                        Id = mainPerson.Id,
+                                        Name = mainPerson.Name,
+                                        Comment = comparePerson.Comment
+                                    };
+
+                                    mainDataBase.Update(newPerson);
+                                    mainDataBase.SaveChanges();
+                                } else if (mainDataBaseList.Where(x => x.Name == comparePerson.Name).FirstOrDefault() == null)
+                                {
+                                    newPerson = new PersonModel()
+                                    {
+                                        Name = comparePerson.Name,
+                                        Comment = comparePerson.Comment
+                                    };
+                                    mainDataBase.Add(newPerson);
+                                    mainDataBase.SaveChanges();
+                                }
+                                mainDataBaseList = mainDataBase.People.AsNoTracking().Select(x => x).ToList();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show($"Программа не может получить доступ к данным в базе данных по пути {secondDataBaseFullPath}.\n" +
+                    $"Возможно вы ввели не корректо путь к файлу с расширением .db или данная база данных не совместима.");
             }
         }
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WPF_HackersList.Models;
 
-namespace WPF_HackersList.Classes.DataBaseConfiguration
+namespace WPF_HackersList.DataBaseClasses.DataBaseConfiguration
 {
     public class DataBaseConfiguration : DbContext
     {        

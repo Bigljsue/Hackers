@@ -1,5 +1,4 @@
-﻿using WPF_HackersList.Classes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -9,23 +8,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WPF_HackersList.Windows.Pages
+namespace WPF_HackersList.Views
 {
     /// <summary>
-    /// Логика взаимодействия для MenuPage.xaml
+    /// Логика взаимодействия для UCSettingsView.xaml
     /// </summary>
-    public partial class MenuPage : Page
+    public partial class UCSettingsView : UserControl
     {
-        public MenuPage()
+        public UCSettingsView()
         {
             InitializeComponent();
-        }
-
-        private void Button_OpenHackersPage_Click(object sender, RoutedEventArgs e) 
-        {
-
         }
     }
 }

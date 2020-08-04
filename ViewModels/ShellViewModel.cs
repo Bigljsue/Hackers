@@ -1,10 +1,4 @@
 ﻿using Caliburn.Micro;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Controls;
-using WPF_HackersList.Classes;
-using WPF_HackersList.DataBaseClasses.DataBaseMethods;
 
 namespace WPF_HackersList.ViewModels
 {
@@ -18,6 +12,11 @@ namespace WPF_HackersList.ViewModels
         public void LoadHackersListPage()
         {
             ActivateItem(new UCHackersListViewModel());            
+        }
+
+        public void LoadSettingsPage()
+        {
+            ActivateItem(new UCSettingsViewModel());
         }
     }
 }

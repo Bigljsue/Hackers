@@ -8,5 +8,7 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
     public interface IDataBaseGetMethods
     {
         public List<PersonModel> GetPeopleList();
+
+        public void ConnectToSecondDataBase(string secondDataBaseFullPath);
     }
 }

@@ -11,14 +11,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using WPF_HackersList.ViewModels;
-using WPF_HackersList.Windows.Pages;
 
 namespace WPF_HackersList.Views
 {
     /// <summary>
     /// Логика взаимодействия для ShellView.xaml
     /// </summary>
-    public partial class ShellView
+    public partial class ShellView : Window
     {
         public ShellView()
         {

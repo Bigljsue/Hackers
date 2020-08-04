@@ -21,6 +21,15 @@
             Height="65" >
                 <Image Source="/Images/Hacker.png"/>
             </Button>
+            
+            <Button 
+            Name="LoadSettingsPage" 
+            HorizontalAlignment="Center"
+            Margin="10"  
+            Width="95"
+            Height="65" >
+                <Image Source="/Images/Settings.png"/>
+            </Button>
         </StackPanel>
 
         <ContentControl Grid.Row="1" Grid.Column="1" x:Name="ActiveItem" MinWidth="400" MinHeight="400"/>

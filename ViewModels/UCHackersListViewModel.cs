@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Data;
-using WPF_HackersList.Classes;
 using WPF_HackersList.DataBaseClasses;
 using WPF_HackersList.DataBaseClasses.DataBaseMethods;
 using WPF_HackersList.Models;
