@@ -56,6 +56,9 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
                     if (person.Name != dataBasePerson.Name)                    
                         updatePerson = true;
 
+                    if (person.Comment != dataBasePerson.Comment)
+                        updatePerson = true;
+
                     if (updatePerson == true)
                     {
                         dataBase.Update(person);

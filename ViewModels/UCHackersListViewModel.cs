@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -12,7 +13,7 @@ using WPF_HackersList.Models;
 
 namespace WPF_HackersList.ViewModels
 {
-    public class UCHackersListViewModel : Screen
+    public class UCHackersListViewModel : Screen, IDeactivate
     {
         private BindableCollection<PersonModel> _people { get; set; }
 

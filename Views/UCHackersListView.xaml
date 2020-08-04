@@ -23,7 +23,7 @@
                 </StackPanel>
                 <Button Name="AddPerson" Content="Добавить" MinHeight="30" HorizontalAlignment="Right" Margin="3" Padding="10,0,10,0"/>
                 <Button Name="RemovePerson" Content="Удалить" MinHeight="30" HorizontalAlignment="Right" Margin="3" Padding="10,0,10,0"/>
-                <Button Name="UpdateDataGrid" Content="Обновить список"  MinHeight="30" HorizontalAlignment="Right" Margin="3" Padding="10,0,10,0"/>
+                <Button Name="UpdateDataGrid" Content="Сохранить изменения"  MinHeight="30" HorizontalAlignment="Right" Margin="3" Padding="10,0,10,0"/>
             </WrapPanel>
         </Grid>
 
@@ -31,8 +31,9 @@
                   AutoGenerateColumns="False" 
                   SelectedItem="{Binding Path=SelectedItem}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}"/>
-                <DataGridTextColumn Header="Ник в игре" Binding="{Binding Path=Name}"/>
+                <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}" Width="Auto" IsReadOnly="True" />
+                <DataGridTextColumn Header="Ник в игре" Binding="{Binding Path=Name}" Width="Auto"/>
+                <DataGridTextColumn Header="Комментарий" Binding="{Binding Path=Comment}" MinWidth="300" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
