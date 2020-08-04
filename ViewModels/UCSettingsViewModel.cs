@@ -20,7 +20,6 @@ namespace WPF_HackersList.ViewModels
 
         public void GetSecondDataBase()
         {
-            MessageBox.Show(SecondDataBaseFullPath);
             if (String.IsNullOrWhiteSpace(SecondDataBaseFullPath) && SecondDataBaseFullPath.Contains(".db",StringComparison.OrdinalIgnoreCase))
             {
                 MessageBox.Show("Поле не заполнено корректно");
@@ -29,7 +28,8 @@ namespace WPF_HackersList.ViewModels
 
             IDataBaseGetMethods DataBaseGetMethods = DependencyResolver.Resolve<IDataBaseGetMethods>();
 
-            DataBaseGetMethods.ConnectToSecondDataBase(SecondDataBaseFullPath);
+            DataBaseGetMethods.GetDataFromOtherDataBase(SecondDataBaseFullPath);
+            MessageBox.Show("Данные успешно добавлены.");
         }
     }
 }

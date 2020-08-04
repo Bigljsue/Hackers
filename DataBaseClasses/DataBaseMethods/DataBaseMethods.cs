@@ -80,54 +80,66 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
             }
         }
 
-        public void ConnectToSecondDataBase(string secondDataBaseFullPath)
+        public void GetDataFromOtherDataBase(string secondDataBaseFullPath)
         {
             List<PersonModel> mainDataBaseList;
             List<PersonModel> secondDataBaseList;
-            PersonModel newPerson;
-            int newId = 0;
+            PersonModel newPerson = new PersonModel()
+            {
+                Id = 0,
+                Name = null,
+                Comment = null
+            };
 
             try
             {
                 using (var mainDataBase = new DataBaseConfiguration.DataBaseConfiguration())
                 {
-                    mainDataBaseList = mainDataBase.People.AsNoTracking().Select(x => x).ToList();
-                    newId = mainDataBaseList.Select(x => x).OrderBy(x => x.Id).Last().Id + 1;
+                    mainDataBaseList = mainDataBase.People.AsNoTracking().Select(x => x).ToList();                        
+
                     using (var secondDataBase = new DataBaseConfiguration.SecondDataBaseConfiguration(secondDataBaseFullPath))
                     {
                         secondDataBaseList = secondDataBase.People.Select(x => x).ToList();
 
+                        if (mainDataBaseList.Count == 0)
+                        {
+                            foreach (var secondDataBasePerson in secondDataBaseList)
+                            {
+                                newPerson.Id = 0;
+                                newPerson.Comment = secondDataBasePerson.Comment;
+                                newPerson.Name = secondDataBasePerson.Name;
+
+                                mainDataBase.Add(newPerson);
+                                mainDataBase.SaveChanges();
+                            }                            
+                            return;
+                        }
+
                         foreach (var mainPerson in mainDataBaseList)
                         {
-                            foreach (var comparePerson in secondDataBaseList)
+                            foreach (var secondDataBasePerson in secondDataBaseList)
                             {
-                                if (mainPerson.Name == comparePerson.Name)
+                                if (mainPerson.Name == secondDataBasePerson.Name)
                                 {
-                                    if (String.IsNullOrWhiteSpace(comparePerson.Comment))
+                                    if (String.IsNullOrWhiteSpace(secondDataBasePerson.Comment))
+                                        newPerson = mainPerson;
+                                    else
                                     {
-                                        newPerson = new PersonModel()
-                                        {
-                                            Id = mainPerson.Id,
-                                            Name = mainPerson.Name,
-                                            Comment = mainPerson.Comment
-                                        };
+                                        newPerson.Id = mainPerson.Id;
+                                        newPerson.Name = mainPerson.Name;
+                                        newPerson.Comment = secondDataBasePerson.Comment;
                                     }
-                                    newPerson = new PersonModel()
-                                    {
-                                        Id = mainPerson.Id,
-                                        Name = mainPerson.Name,
-                                        Comment = comparePerson.Comment
-                                    };
 
                                     mainDataBase.Update(newPerson);
                                     mainDataBase.SaveChanges();
-                                } else if (mainDataBaseList.Where(x => x.Name == comparePerson.Name).FirstOrDefault() == null)
+                                    mainDataBaseList = mainDataBase.People.AsNoTracking().Select(x => x).ToList();
+                                }
+                                else if (mainDataBaseList.Where(x => x.Name == secondDataBasePerson.Name).FirstOrDefault() == null)
                                 {
-                                    newPerson = new PersonModel()
-                                    {
-                                        Name = comparePerson.Name,
-                                        Comment = comparePerson.Comment
-                                    };
+                                    newPerson.Id = 0;
+                                    newPerson.Name = secondDataBasePerson.Name;
+                                    newPerson.Comment = secondDataBasePerson.Comment;
+
                                     mainDataBase.Add(newPerson);
                                     mainDataBase.SaveChanges();
                                 }
@@ -137,10 +149,11 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 MessageBox.Show($"Программа не может получить доступ к данным в базе данных по пути {secondDataBaseFullPath}.\n" +
-                    $"Возможно вы ввели не корректо путь к файлу с расширением .db или данная база данных не совместима.");
+                    $"Возможно вы ввели не корректо путь к файлу с расширением .db или данная база данных не совместима.\n" +
+                    $"{ex.Message}");
             }
         }
 
