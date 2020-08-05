@@ -9,18 +9,16 @@ namespace WPF_HackersList.ViewModels
 {
     public class ShellViewModel : Conductor<object>
     {
-        private bool FirstLoad = true;
-
         public ShellViewModel()
         {
-            ActivateItem(new UCHackersListViewModel());
             CheckForDataBase();
+            ActivateItem(new UCHackersListViewModel());            
         }
 
         public void LoadHackersListPage()
         {
-            ActivateItem(new UCHackersListViewModel());
             CheckForDataBase();
+            ActivateItem(new UCHackersListViewModel());            
         }
 
         public void LoadSettingsPage()
@@ -30,10 +28,6 @@ namespace WPF_HackersList.ViewModels
 
         public void CheckForDataBase()
         {
-            if (FirstLoad == false)
-                return;
-            FirstLoad = false;
-
             try
             {
                 string programDirectory = Directory.GetCurrentDirectory();
@@ -48,7 +42,7 @@ namespace WPF_HackersList.ViewModels
                 }
                 else if (dataBaseDebug.IsDebugExist())
                 {
-                    MessageBox.Show("Файл базы данных отсутсвует, попытка восстановления.");
+                    MessageBox.Show("Файл базы данных отсутсвует, попытка восстановления.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     dataBaseDebug.RestoreDataBase();
                 }
                 else
@@ -58,19 +52,19 @@ namespace WPF_HackersList.ViewModels
                     var dataBaseFiles = directoryFiles.Where(x => x.Contains(".db", StringComparison.OrdinalIgnoreCase) == true).Select(x => x);
                     if (dataBaseFiles.Count() == 0)
                         throw new Exception("Копии файла базы даных нету, файл должен поступать вместе с программой и называтся \"DataBase.db\"." +
-                            "Для работы программы файл необходимо скачать и переместить в папку с программой");
+                            "Для работы программы файл необходимо скачать и переместить в папку с программой.");
 
                     string dataBaseFilePath = dataBaseFiles.FirstOrDefault();
 
-                    var newFilePath = String.Format("{0}\\{1}", Directory.GetCurrentDirectory(), "DataBase.db");
+                    var dataBaseNewFilePath = String.Format("{0}\\{1}", Directory.GetCurrentDirectory(), "DataBase.db");
 
-                    File.Move(dataBaseFilePath, newFilePath, true);
+                    File.Move(dataBaseFilePath, dataBaseNewFilePath, true);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                MessageBox.Show($"Ошибка проверки базы данных.\n{ex.Message}","Ошибка",MessageBoxButton.OK,MessageBoxImage.Error);
+                Application.Current.Shutdown();
             }
         }
 

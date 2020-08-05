@@ -18,7 +18,7 @@ namespace WPF_HackersList.DataBaseClasses
         /// <summary>
         /// Влючает в конце путя \
         /// </summary>
-        public string AppTempFolder = String.Format("{0}{1}", Path.GetTempPath(), "GloriaDebug\\");
+        public string AppTempFolder = String.Format("{0}{1}", Path.GetTempPath(), "Hackers\\");
 
         private void DeleteLastDataBaseDebug()
         {

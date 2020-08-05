@@ -20,6 +20,7 @@ namespace WPF_HackersList.Views
     {
         public UCSettingsView()
         {
+            FontSize = WPF_HackersList.Properties.Settings.Default.FontSize;
             InitializeComponent();
         }
     }

@@ -20,6 +20,7 @@ namespace WPF_HackersList.Views
     {
         public UCHackersListView()
         {
+            FontSize = WPF_HackersList.Properties.Settings.Default.FontSize;
             InitializeComponent();
         }
     }

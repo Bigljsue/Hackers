@@ -84,12 +84,7 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
         {
             List<PersonModel> mainDataBaseList;
             List<PersonModel> secondDataBaseList;
-            PersonModel newPerson = new PersonModel()
-            {
-                Id = 0,
-                Name = null,
-                Comment = null
-            };
+            PersonModel newPerson;
 
             try
             {
@@ -105,13 +100,15 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
                         {
                             foreach (var secondDataBasePerson in secondDataBaseList)
                             {
-                                newPerson.Id = 0;
-                                newPerson.Comment = secondDataBasePerson.Comment;
-                                newPerson.Name = secondDataBasePerson.Name;
+                                newPerson = new PersonModel()
+                                 {
+                                     Name = secondDataBasePerson.Name,
+                                     Comment = secondDataBasePerson.Comment
+                                };
 
-                                mainDataBase.Add(newPerson);
-                                mainDataBase.SaveChanges();
-                            }                            
+                                mainDataBase.Add(newPerson);                                
+                            }
+                            mainDataBase.SaveChanges();
                             return;
                         }
 
@@ -125,9 +122,12 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
                                         newPerson = mainPerson;
                                     else
                                     {
-                                        newPerson.Id = mainPerson.Id;
-                                        newPerson.Name = mainPerson.Name;
-                                        newPerson.Comment = secondDataBasePerson.Comment;
+                                        newPerson = new PersonModel()
+                                        {
+                                            Id = mainPerson.Id,
+                                            Name = mainPerson.Name,
+                                            Comment = secondDataBasePerson.Comment
+                                        };
                                     }
 
                                     mainDataBase.Update(newPerson);
@@ -136,24 +136,27 @@ namespace WPF_HackersList.DataBaseClasses.DataBaseMethods
                                 }
                                 else if (mainDataBaseList.Where(x => x.Name == secondDataBasePerson.Name).FirstOrDefault() == null)
                                 {
-                                    newPerson.Id = 0;
-                                    newPerson.Name = secondDataBasePerson.Name;
-                                    newPerson.Comment = secondDataBasePerson.Comment;
+                                    newPerson = new PersonModel()
+                                    {
+                                        Name = secondDataBasePerson.Name,
+                                        Comment = secondDataBasePerson.Comment
+                                    };
 
                                     mainDataBase.Add(newPerson);
                                     mainDataBase.SaveChanges();
+                                    mainDataBaseList = mainDataBase.People.AsNoTracking().Select(x => x).ToList();
                                 }
-                                mainDataBaseList = mainDataBase.People.AsNoTracking().Select(x => x).ToList();
                             }
-                        }
+                        }                        
                     }
                 }
+                MessageBox.Show("Данные успешно совмещены","Внимание",MessageBoxButton.OK,MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Программа не может получить доступ к данным в базе данных по пути {secondDataBaseFullPath}.\n" +
                     $"Возможно вы ввели не корректо путь к файлу с расширением .db или данная база данных не совместима.\n" +
-                    $"{ex.Message}");
+                    $"{ex.Message}","Error",MessageBoxButton.OK,MessageBoxImage.Error);
             }
         }
 

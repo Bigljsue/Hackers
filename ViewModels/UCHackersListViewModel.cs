@@ -64,7 +64,7 @@ namespace WPF_HackersList.ViewModels
         }
 
         public UCHackersListViewModel()
-        {
+        {            
             UpdateDataGrid();
         }
 
@@ -83,7 +83,7 @@ namespace WPF_HackersList.ViewModels
         {
             if (String.IsNullOrWhiteSpace(PersonName))
             {
-                MessageBox.Show("Поле с ником не заполенно корректно");
+                MessageBox.Show("Поле с ником не заполенно корректно", "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
 
@@ -97,7 +97,7 @@ namespace WPF_HackersList.ViewModels
         {
             if (SelectedItem == null)
             {
-                MessageBox.Show("Игрок не вибран в списке");
+                MessageBox.Show("Игрок не вибран в списке", "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
 
