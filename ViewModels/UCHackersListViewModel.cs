@@ -73,10 +73,17 @@ namespace WPF_HackersList.ViewModels
             IDataBaseGetMethods DataBaseGetMethods = DependencyResolver.Resolve<IDataBaseGetMethods>();
             IDataBaseUpdateMethods DataBaseUpdateMethods = DependencyResolver.Resolve<IDataBaseUpdateMethods>();
 
-            if(People != null && SelectedItem != null)
-                DataBaseUpdateMethods.UpdateChanges(People.ToList());
+            try
+            {
+                if (People != null && SelectedItem != null)
+                    DataBaseUpdateMethods.UpdateChanges(People.ToList());
 
-            People = new BindableCollection<PersonModel>(DataBaseGetMethods.GetPeopleList());
+                People = new BindableCollection<PersonModel>(DataBaseGetMethods.GetPeopleList());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,"Ошибка",MessageBoxButton.OK,MessageBoxImage.Error);
+            }
         }
 
         public void AddPerson()

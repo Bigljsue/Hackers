@@ -31,25 +31,44 @@ namespace WPF_HackersList.DataBaseClasses
         }
 
         public bool IsDebugExist()
-        {
-            if (GetDataBaseDebugsSorted() == null)
+        {           
+            if (!Directory.Exists(AppTempFolder))
                 return false;
+
+            var dataBaseDebugFiles = Directory.GetFiles(AppTempFolder);
+
+            if (dataBaseDebugFiles.Count() < 1)
+                return false;
+
             return true;
         }
 
-        public void RestoreDataBase()
+        public void RestoreDataBase(string dataBaseToRestore)
         {
-            var lastDebugedDataBase = AppTempFolder + GetDataBaseDebugsSorted().FirstOrDefault();
-
-            if (!File.Exists(lastDebugedDataBase))
+            try
             {
-                onComplete("Дубликатов баз данных нету.", false);
-                return;
+                var dataBaseLastDebug = AppTempFolder + GetDataBaseDebugsSorted().FirstOrDefault();
+
+                if (!File.Exists(dataBaseLastDebug))
+                {
+                    onComplete("Дубликатов баз данных нету.", false);
+                    throw new Exception("Дубликатов баз данных нету.");
+                }
+
+                if (String.IsNullOrWhiteSpace(dataBaseToRestore))
+                {
+                    dataBaseToRestore = String.Format("{0}\\{1}", Directory.GetCurrentDirectory(),"DataBase.db");
+
+                    File.Copy(dataBaseLastDebug, dataBaseToRestore);
+                    return;
+                }
+
+                File.Copy(dataBaseLastDebug, dataBaseToRestore);
             }
-
-            var loadedDataBase = Directory.GetCurrentDirectory() + $"\\{FileToDebug}";
-
-            File.Copy(lastDebugedDataBase, loadedDataBase);
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async void DebugDataBase()

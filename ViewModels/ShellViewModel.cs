@@ -11,8 +11,7 @@ namespace WPF_HackersList.ViewModels
     {
         public ShellViewModel()
         {
-            CheckForDataBase();
-            ActivateItem(new UCHackersListViewModel());            
+            CheckForDataBase();           
         }
 
         public void LoadHackersListPage()
@@ -31,11 +30,11 @@ namespace WPF_HackersList.ViewModels
             try
             {
                 string programDirectory = Directory.GetCurrentDirectory();
-                var dataBaseFile = String.Format("{0}\\{1}", Directory.GetCurrentDirectory(), "DataBase.db");
+                var dataBaseFile = Directory.GetFiles(programDirectory).ToList().Where(x => x.Contains(".db", StringComparison.OrdinalIgnoreCase) == true).FirstOrDefault();
 
                 DataBaseDebug dataBaseDebug = new DataBaseDebug();
 
-                if (File.Exists(dataBaseFile))
+                if (!String.IsNullOrWhiteSpace(dataBaseFile))
                 {
                     dataBaseDebug.DebugDataBase();
                     return;
@@ -43,7 +42,7 @@ namespace WPF_HackersList.ViewModels
                 else if (dataBaseDebug.IsDebugExist())
                 {
                     MessageBox.Show("Файл базы данных отсутсвует, попытка восстановления.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                    dataBaseDebug.RestoreDataBase();
+                    dataBaseDebug.RestoreDataBase(dataBaseFile);
                 }
                 else
                 {
