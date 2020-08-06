@@ -29,40 +29,36 @@ namespace WPF_HackersList.ViewModels
         {
             try
             {
-                string programDirectory = Directory.GetCurrentDirectory();
-                var dataBaseFile = Directory.GetFiles(programDirectory).ToList().Where(x => x.Contains(".db", StringComparison.OrdinalIgnoreCase) == true).FirstOrDefault();
-
                 DataBaseDebug dataBaseDebug = new DataBaseDebug();
+                var programDirectory = Directory.GetCurrentDirectory();
+                var dataBaseFiles = Directory.GetFiles(programDirectory).Where(x => x.Contains(".db", StringComparison.OrdinalIgnoreCase) == true);
+                var dataBaseNewFilePath = String.Format("{0}\\{1}", programDirectory, "DataBase.db");
+                var isDataBaseFileExist = !String.IsNullOrWhiteSpace(dataBaseNewFilePath);
 
-                if (!String.IsNullOrWhiteSpace(dataBaseFile))
+                if (!isDataBaseFileExist)
                 {
-                    dataBaseDebug.DebugDataBase();
-                    return;
-                }
-                else if (dataBaseDebug.IsDebugExist())
-                {
-                    MessageBox.Show("Файл базы данных отсутсвует, попытка восстановления.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                    dataBaseDebug.RestoreDataBase(dataBaseFile);
+                    if (dataBaseFiles.Count() > 0)
+                    {
+                        var dataBaseFilePath = dataBaseFiles.FirstOrDefault();
+                        var dataBaseFileName = dataBaseFiles.Single().Split("\\").Last();
+
+                        File.Move(dataBaseFilePath, dataBaseNewFilePath, true);
+
+                        MessageBox.Show($"Новый файл ({dataBaseFileName}) базы данных, расположенный в папке с программой, был взят и переименован в (DataBase.db).",
+                            "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    }
+                    else if (dataBaseDebug.IsDebugExist())
+                    {
+                        MessageBox.Show("Файл базы данных отсутсвует, попытка восстановления из резервных копий.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        dataBaseDebug.RestoreDataBase(dataBaseNewFilePath);
+                    }
                 }
                 else
-                {
-                    var directoryFiles = Directory.GetFiles(programDirectory);
-
-                    var dataBaseFiles = directoryFiles.Where(x => x.Contains(".db", StringComparison.OrdinalIgnoreCase) == true).Select(x => x);
-                    if (dataBaseFiles.Count() == 0)
-                        throw new Exception("Копии файла базы даных нету, файл должен поступать вместе с программой и называтся \"DataBase.db\"." +
-                            "Для работы программы файл необходимо скачать и переместить в папку с программой.");
-
-                    string dataBaseFilePath = dataBaseFiles.FirstOrDefault();
-
-                    var dataBaseNewFilePath = String.Format("{0}\\{1}", Directory.GetCurrentDirectory(), "DataBase.db");
-
-                    File.Move(dataBaseFilePath, dataBaseNewFilePath, true);
-                }
+                    dataBaseDebug.DebugDataBase();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка проверки базы данных.\n{ex.Message}","Ошибка",MessageBoxButton.OK,MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка при проверки на существование базы данных в папке с программой.\n{ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown();
             }
         }
