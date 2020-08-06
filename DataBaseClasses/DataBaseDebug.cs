@@ -3,71 +3,51 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace WPF_HackersList.DataBaseClasses
 {
     public class DataBaseDebug
     {
-        public delegate void MethodsOnCopying(string message, bool state);
-        public event MethodsOnCopying onComplete = delegate { };
-
-        public string FileName = "DataBase";
-
-        public string FileToDebug = "DataBase.db";
-
         /// <summary>
         /// Влючает в конце путя \
         /// </summary>
-        public string AppTempFolder = String.Format("{0}{1}", Path.GetTempPath(), "Hackers\\");
+        private string AppTempFolder = String.Format("{0}{1}", Path.GetTempPath(), "Hackers\\");
 
-        private void DeleteLastDataBaseDebug()
-        {
-            var lastFile = AppTempFolder + GetDataBaseDebugsSorted().LastOrDefault();
+        private string DataBaseFilePath = String.Format("{0}\\{1}",Directory.GetCurrentDirectory(),"DataBase.db");
 
-            if (!File.Exists(lastFile))
-                return;
-
-            File.Delete(lastFile);
-        }
-
-        public bool IsDebugExist()
-        {           
-            if (!Directory.Exists(AppTempFolder))
-                return false;
-
-            var dataBaseDebugFiles = Directory.GetFiles(AppTempFolder);
-
-            if (dataBaseDebugFiles.Count() < 1)
-                return false;
-
-            return true;
-        }
-
-        public void RestoreDataBase(string dataBaseToRestore)
+        public void RestoreDataBase()
         {
             try
             {
-                var dataBaseLastDebug = AppTempFolder + GetDataBaseDebugsSorted().FirstOrDefault();
+                var programDirectory = Directory.GetCurrentDirectory();
+                var dataBaseFiles = Directory.GetFiles(programDirectory).Where(x => x.Contains(".db", StringComparison.OrdinalIgnoreCase) == true);
 
-                if (!File.Exists(dataBaseLastDebug))
+                if (dataBaseFiles.Count() > 0)
                 {
-                    onComplete("Дубликатов баз данных нету.", false);
-                    throw new Exception("Дубликатов баз данных нету.");
-                }
+                    var dataBaseFilePath = dataBaseFiles.FirstOrDefault();
+                    var dataBaseFileName = dataBaseFiles.Single().Split("\\").Last();
 
-                if (String.IsNullOrWhiteSpace(dataBaseToRestore))
+                    File.Move(dataBaseFilePath, DataBaseFilePath, true);
+
+                    MessageBox.Show($"Новый файл ({dataBaseFileName}) базы данных, расположенный в папке с программой, был взят и переименован в (DataBase.db).",
+                        "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
+                else if (IsDebugExist())
                 {
-                    dataBaseToRestore = String.Format("{0}\\{1}", Directory.GetCurrentDirectory(),"DataBase.db");
+                    MessageBox.Show("Файл базы данных отсутсвует, попытка восстановления из резервных копий.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
-                    File.Copy(dataBaseLastDebug, dataBaseToRestore);
-                    return;
+                    var dataBaseLastDebug = AppTempFolder + GetDataBaseDebugsSorted().FirstOrDefault();
+
+                    File.Copy(dataBaseLastDebug, DataBaseFilePath, true);
                 }
-
-                File.Copy(dataBaseLastDebug, dataBaseToRestore);
+                else
+                    throw new Exception("Отсутсвует база данных. Отсутсвуют резервные копии базы данных");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                MessageBox.Show($"Ошибка при проверки на существование базы данных в папке с программой.Приложение закроется.\nОшибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
             }
         }
 
@@ -75,24 +55,21 @@ namespace WPF_HackersList.DataBaseClasses
         {
             try
             {
-                if (!File.Exists(FileToDebug))
-                    throw new Exception("Файла базы данных нету");
-
-                if (GetDataBaseDebugsSorted() != null)
+                if (IsDebugExist())
                     if (GetDataBaseDebugsSorted().Count() > 19)
                         DeleteLastDataBaseDebug();
 
-                var newFileSavePath = AppTempFolder + GetRenamedDataBase();
+                var dataBaseDebuFilePath = AppTempFolder + GetRenamedDataBase();
 
                 var bufferLength = 10 * 1024 * 8;
                 var fileBuffer = new byte[bufferLength];
 
 
-                await using (var fileStreamReader = new FileStream(FileToDebug, FileMode.Open, FileAccess.Read))
+                await using (var fileStreamReader = new FileStream(DataBaseFilePath, FileMode.Open, FileAccess.Read))
                 {
                     long fileToDebugSize = fileStreamReader.Length;
 
-                    using (var fileStreamWriter = new FileStream(newFileSavePath, FileMode.Create, FileAccess.Write))
+                    using (var fileStreamWriter = new FileStream(dataBaseDebuFilePath, FileMode.Create, FileAccess.Write))
                         while (true)
                         {
                             int bytesRead = fileStreamReader.Read(fileBuffer, 0, bufferLength);
@@ -106,13 +83,14 @@ namespace WPF_HackersList.DataBaseClasses
                                 break;
                         }
                 }
-                onComplete("База дынных скопирована успешно", true);
             }
             catch (Exception e)
             {
-                onComplete(String.Format("Ошибка копирования: {0}", e.Message), false);
+                MessageBox.Show($"Ошибка копирования базы данных.\n{e.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        public bool IsDataBaseExist() => File.Exists(DataBaseFilePath);
 
         private int GetLastSavedDataBaseId()
         {
@@ -140,6 +118,31 @@ namespace WPF_HackersList.DataBaseClasses
             var dataBaseDebugsNamesSorted = dataBaseDebugsNames.OrderBy(x => Convert.ToInt32(x.Split("_")[0])).Select(x => x);
 
             return dataBaseDebugsNamesSorted;
+        }
+
+        private bool IsDebugExist()
+        {
+            var isDebugDirectoryNotExist = !Directory.Exists(AppTempFolder);
+
+            if (isDebugDirectoryNotExist)
+                return false;
+
+            var dataBaseDebugFiles = Directory.GetFiles(AppTempFolder);
+
+            if (dataBaseDebugFiles.Count() < 1)
+                return false;
+
+            return true;
+        }    
+
+        private void DeleteLastDataBaseDebug()
+        {
+            var lastFile = AppTempFolder + GetDataBaseDebugsSorted().LastOrDefault();
+
+            if (!File.Exists(lastFile))
+                return;
+
+            File.Delete(lastFile);
         }
 
         private string GetRenamedDataBase()
