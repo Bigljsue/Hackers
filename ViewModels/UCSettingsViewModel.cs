@@ -90,6 +90,12 @@ namespace WPF_HackersList.ViewModels
 
         public async void SetR6SRegion()
         {
+            if (String.IsNullOrWhiteSpace(SelectedR6SAccount))
+            {
+                MessageBox.Show($"Замена региона прошла успешно на {SelectedR6SRegion}", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
             R6SGameSettingsSplited[IndexOfDataCenterHintInRow] = String.Format("{0}={1}\r", "DataCenterHint", SelectedR6SRegion);
             string gameSettingsFileText = null;
 
@@ -100,7 +106,7 @@ namespace WPF_HackersList.ViewModels
                 await streamWriter.WriteAsync(gameSettingsFileText);
             
 
-            MessageBox.Show($"Замена региона прошла успешно на {SelectedR6SRegion}", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"Не найдены аккаунты Rainbow Sixe Siege в документах", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public void GetR6SData()
@@ -108,6 +114,13 @@ namespace WPF_HackersList.ViewModels
             var documents = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             R6SAccountsDirectory = String.Format("{0}\\{1}\\{2}", documents, "My Games", "Rainbow Six - Siege");
             var rainbowSixSiegeAccounts = Directory.GetDirectories(R6SAccountsDirectory);
+
+            if (rainbowSixSiegeAccounts.Count() < 1)
+            {
+                MessageBox.Show($"Не найдены аккаунты Rainbow Sixe Siege в документах", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             List<string> itemCollection = new List<string>();
             SelectedR6SAccount = rainbowSixSiegeAccounts.First().Split("\\").Last();
 
