@@ -92,7 +92,7 @@ namespace WPF_HackersList.ViewModels
         {
             if (String.IsNullOrWhiteSpace(SelectedR6SAccount))
             {
-                MessageBox.Show($"Замена региона прошла успешно на {SelectedR6SRegion}", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Не найдены аккаунты Rainbow Sixe Siege в документах", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -100,13 +100,12 @@ namespace WPF_HackersList.ViewModels
             string gameSettingsFileText = null;
 
             foreach (var text in R6SGameSettingsSplited)
-                gameSettingsFileText += text;
+                gameSettingsFileText += text + "\n";
 
             using (StreamWriter streamWriter = new StreamWriter(R6SGameSettingsPath))            
                 await streamWriter.WriteAsync(gameSettingsFileText);
-            
 
-            MessageBox.Show($"Не найдены аккаунты Rainbow Sixe Siege в документах", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Замена региона прошла успешно на {SelectedR6SRegion}", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);            
         }
 
         public void GetR6SData()
