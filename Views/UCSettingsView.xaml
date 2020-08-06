@@ -51,6 +51,32 @@
                     <Label Content="30"/>
                 </ComboBox>
             </WrapPanel>
+
+            <GridSplitter Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1" MinHeight="3" Margin="0,10,0,10" HorizontalAlignment="Stretch" Background="Gray"/>
+
+            <WrapPanel>
+                <TextBlock Text="Ranibow Six Siege: регион "/>
+                <ComboBox Name="R6SAccountsCollection" Text="{Binding Path=SelectedR6SAccount}">
+                </ComboBox>
+                <ComboBox Text="{Binding Path=SelectedR6SRegion}">
+                    <Label Content="default"/>
+                    <Label Content="eastus"/>
+                    <Label Content="centralus"/>
+                    <Label Content="southcentralus"/>
+                    <Label Content="westus"/>
+                    <Label Content="brazilsouth"/>
+                    <Label Content="northeurope"/>
+                    <Label Content="westeurope"/>
+                    <Label Content="southafricanorth"/>
+                    <Label Content="eastasia"/>
+                    <Label Content="southeastasia"/>
+                    <Label Content="australiaeast"/>
+                    <Label Content="australiasoutheast"/>
+                    <Label Content="japanwest"/>
+                </ComboBox>
+                <Button x:Name="SetR6SRegion" Content="Применить" Padding="10,3,10,3" Margin="5,0,0,0"/>
+            </WrapPanel>
+
         </StackPanel>
     </Grid>
 </UserControl>
