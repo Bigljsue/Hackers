@@ -28,7 +28,7 @@
             <GridSplitter Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1" MinHeight="3" Margin="0,10,0,10" HorizontalAlignment="Stretch" Background="Gray"/>
 
             <TextBlock Text="Добавляет данные с дургой базы данных ( окончание файла должно быть .db )" Margin="0,0,0,5" HorizontalAlignment="Center"/>
-            <WrapPanel>
+            <WrapPanel Margin="0,5,0,5">
                 <TextBlock Text="Полный путь к файлу:" VerticalAlignment="Center" MinHeight="{Binding Height, ElementName=GetSecondDataBase}"/>
                 <TextBox MinWidth="200" Text="{Binding Path=SecondDataBaseFullPath}"/>
                 <Button x:Name="GetSecondDataBasePath" Content="..." Padding="10,3,10,3" />
@@ -37,7 +37,7 @@
 
             <GridSplitter Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1" MinHeight="3" Margin="0,10,0,10" HorizontalAlignment="Stretch" Background="Gray"/>
 
-            <WrapPanel>
+            <WrapPanel Margin="0,5,0,5">
                 <TextBlock Text="Размер шрифта приложения: "/>
                 <ComboBox Text="{Binding Path=SelectedFontSize}">
                     <Label Content="14"/>
@@ -54,14 +54,14 @@
 
             <GridSplitter Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1" MinHeight="3" Margin="0,10,0,10" HorizontalAlignment="Stretch" Background="Gray"/>
 
-            <WrapPanel>
-                <TextBlock Text="Ranibow Six Siege: Аккаунт: "/>
+            <WrapPanel Margin="0,5,0,5">
+                <TextBlock Text="Ranibow Six Siege: Аккаунт: " VerticalAlignment="Center"/>
                 <ComboBox Name="R6SAccountsCollection" Text="{Binding Path=SelectedR6SAccount}">
                 </ComboBox>
             </WrapPanel>
 
-            <WrapPanel>
-                <TextBlock Text="Регион "/>
+            <WrapPanel Margin="0,5,0,5">
+                <TextBlock Text="Регион: " VerticalAlignment="Center"/>
                 <ComboBox Text="{Binding Path=SelectedR6SRegion}">
                     <Label Content="default"/>
                     <Label Content="eastus"/>

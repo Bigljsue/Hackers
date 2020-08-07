@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using WPF_HackersList.Classes;
 using WPF_HackersList.DataBaseClasses;
 using WPF_HackersList.DataBaseClasses.DataBaseMethods;
 using WPF_HackersList.Models;
@@ -35,7 +36,7 @@ namespace WPF_HackersList.ViewModels
         //////// Rainbow Six Siege end
 
         //////// Rainbow Six Siege start
-        private readonly R6SGameSettingsModel R6SGameSettings = new R6SGameSettingsModel();
+        private readonly R6SGameSettings R6SGameSettings = new R6SGameSettings();
 
         private List<string> _r6sAccountsCollection;
         public List<string> R6SAccountsCollection
@@ -59,13 +60,12 @@ namespace WPF_HackersList.ViewModels
         }
         ////////// Rainbow Six Siege end
 
+        //////// Program settings start
         public UCSettingsViewModel()
         {
             GetR6SData();
-            GetR6SRegion();
         }
 
-        //////// Program settings start
         public void SetNewFontSize()
         {
             Properties.Settings.Default.FontSize = Convert.ToDouble(SelectedFontSize);
@@ -83,22 +83,14 @@ namespace WPF_HackersList.ViewModels
                 return;
             }
 
-            string gameSettingsNewFileText = null;
-
-            R6SGameSettings.R6SGameSettingsFileTextSplited[R6SGameSettings.R6SIndexOfDataCenterHintInRow] = String.Format("DataCenterHint={0}\r", SelectedR6SRegion);
-
-            foreach (var text in R6SGameSettings.R6SGameSettingsFileTextSplited)
-                gameSettingsNewFileText += text + "\n";
-
-            using (StreamWriter streamWriter = new StreamWriter(R6SGameSettings.R6SAccountGameSettingsFilePath))            
-                await streamWriter.WriteAsync(gameSettingsNewFileText);
+            R6SGameSettings.SetNewRegion(SelectedR6SAccount, SelectedR6SRegion);
 
             MessageBox.Show($"Замена региона прошла успешно на {SelectedR6SRegion}", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);            
         }
 
         public void GetR6SData()
         {
-            var rainbowSixSiegeAccounts = Directory.GetDirectories(R6SGameSettings.R6SAccountsDirectory);
+            var rainbowSixSiegeAccounts = R6SGameSettings.GetAccountsNames();
 
             if (rainbowSixSiegeAccounts.Count() < 1)
             {
@@ -106,23 +98,9 @@ namespace WPF_HackersList.ViewModels
                 return;
             }
 
-            List<string> itemCollection = new List<string>();
-            SelectedR6SAccount = rainbowSixSiegeAccounts.First().Split("\\").Last();
-
-            foreach (var accountName in rainbowSixSiegeAccounts)
-                itemCollection.Add(accountName.Split("\\").Last());
-
-            R6SAccountsCollection = itemCollection;
-        }
-
-        public void GetR6SRegion()
-        {
-            if (String.IsNullOrWhiteSpace(SelectedR6SAccount))
-                return;
-
-            R6SGameSettings.R6SAccountGameSettingsFilePath = String.Format("{0}\\{1}\\{2}", R6SGameSettings.R6SAccountsDirectory, SelectedR6SAccount, "GameSettings.ini");
-
-            SelectedR6SRegion = R6SGameSettings.R6SSelectedRegion;
+            R6SAccountsCollection = rainbowSixSiegeAccounts;
+            SelectedR6SAccount = rainbowSixSiegeAccounts.FirstOrDefault();
+            SelectedR6SRegion = R6SGameSettings.GetAccountRegion(SelectedR6SAccount);
         }
         ////////// Rainbow Six Siege end
 
