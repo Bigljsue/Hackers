@@ -10,6 +10,8 @@ namespace WPF_HackersList.Classes
 {
     public class R6SGameSettings
     {
+        public bool SuccesefulReplaced = false;
+
         private string R6SAccountsDirectory 
         { 
             get 
@@ -86,6 +88,8 @@ namespace WPF_HackersList.Classes
 
                 using (StreamWriter streamWriter = new StreamWriter(accountGameSettingsPath))
                     streamWriter.Write(gameSettingsTextNew);
+
+                SuccesefulReplaced = true;
             }
             catch (Exception ex)
             {
@@ -93,9 +97,5 @@ namespace WPF_HackersList.Classes
             }
         }
 
-        //public List<string> GetRegionsNames()
-        //{
-
-        //}
     }
 }

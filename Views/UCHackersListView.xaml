@@ -13,17 +13,12 @@
         </Grid.RowDefinitions>
 
         <Grid>
-            <WrapPanel>                
-                <StackPanel>
-                    <WrapPanel HorizontalAlignment="Right">
-                        <TextBlock Text="{Binding Path=FilteredPeopleCount}" Margin="3"/>
-                        <ComboBox Name="FilteredPeople" Text="{Binding Path=PersonName}" MinWidth="300"
-                              Margin="3" IsEditable="true"/>
-                    </WrapPanel>
-                </StackPanel>
-                <Button Name="AddPerson" Content="Добавить" MinHeight="30" HorizontalAlignment="Right" Margin="3" Padding="10,0,10,0"/>
-                <Button Name="RemovePerson" Content="Удалить" MinHeight="30" HorizontalAlignment="Right" Margin="3" Padding="10,0,10,0"/>
-                <Button Name="UpdateDataGrid" Content="Сохранить изменения"  MinHeight="30" HorizontalAlignment="Right" Margin="3" Padding="10,0,10,0"/>
+            <WrapPanel VerticalAlignment="Center">
+                <TextBlock Text="{Binding Path=FilteredPeopleCount}" VerticalAlignment="Center" Foreground="White" Margin="{Binding Margin, ElementName=FilteredPeople}"/>
+                <ComboBox Name="FilteredPeople" Text="{Binding Path=PersonName}" MinWidth="250" Margin="5,5,5,5" IsEditable="true"/>
+                <Button Name="AddPerson" Content="Добавить" HorizontalAlignment="Right" Margin="{Binding Margin, ElementName=FilteredPeople}" Padding="10,0,10,0"/>
+                <Button Name="RemovePerson" Content="Удалить" HorizontalAlignment="Right" Margin="{Binding Margin, ElementName=FilteredPeople}" Padding="10,0,10,0"/>
+                <Button Name="UpdateDataGrid" Content="Сохранить изменения" HorizontalAlignment="Right" Margin="{Binding Margin, ElementName=FilteredPeople}" Padding="10,0,10,0"/>
             </WrapPanel>
         </Grid>
 

@@ -85,7 +85,8 @@ namespace WPF_HackersList.ViewModels
 
             R6SGameSettings.SetNewRegion(SelectedR6SAccount, SelectedR6SRegion);
 
-            MessageBox.Show($"Замена региона прошла успешно на {SelectedR6SRegion}", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);            
+            if(R6SGameSettings.SuccesefulReplaced)
+                MessageBox.Show($"Замена региона прошла успешно на {SelectedR6SRegion}", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);            
         }
 
         public void GetR6SData()
