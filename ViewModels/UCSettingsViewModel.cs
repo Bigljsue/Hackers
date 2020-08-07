@@ -12,36 +12,32 @@ using System.Windows;
 using System.Windows.Controls;
 using WPF_HackersList.DataBaseClasses;
 using WPF_HackersList.DataBaseClasses.DataBaseMethods;
+using WPF_HackersList.Models;
 
 namespace WPF_HackersList.ViewModels
 {
     public class UCSettingsViewModel : Screen
     {
         private string _secondDataBaseFullPath;
-
         public string SecondDataBaseFullPath
         {
             get { return _secondDataBaseFullPath; }
             set { _secondDataBaseFullPath = value; NotifyOfPropertyChange(() => SecondDataBaseFullPath);  }
         }
 
+        //////// Program settings start
         private string _selectedFontSize = Properties.Settings.Default.FontSize.ToString();
-
         public string SelectedFontSize
         {
             get { return _selectedFontSize; }
             set { _selectedFontSize = value; NotifyOfPropertyChange(() => SelectedFontSize); SetNewFontSize(); }
         }
+        //////// Rainbow Six Siege end
 
         //////// Rainbow Six Siege start
-        
-        private string R6SAccountsDirectory;
-        private int IndexOfDataCenterHintInRow;
-        private string[] R6SGameSettingsSplited;
-        private string R6SGameSettingsPath;
+        private readonly R6SGameSettingsModel R6SGameSettings = new R6SGameSettingsModel();
 
         private List<string> _r6sAccountsCollection;
-
         public List<string> R6SAccountsCollection
         {
             get { return _r6sAccountsCollection; }
@@ -49,16 +45,13 @@ namespace WPF_HackersList.ViewModels
         }
 
         private string _selectedR6SAccount;
-
         public string SelectedR6SAccount
         {
             get { return _selectedR6SAccount; }
             set { _selectedR6SAccount = value; NotifyOfPropertyChange(() => SelectedR6SAccount);  }
         }
 
-
         private string _selectedR6SRegion;
-
         public string SelectedR6SRegion
         {
             get { return _selectedR6SRegion; }
@@ -72,22 +65,16 @@ namespace WPF_HackersList.ViewModels
             GetR6SRegion();
         }
 
-
+        //////// Program settings start
         public void SetNewFontSize()
         {
             Properties.Settings.Default.FontSize = Convert.ToDouble(SelectedFontSize);
             Properties.Settings.Default.Save();
             NotifyOfPropertyChange(() => Properties.Settings.Default.FontSize);
         }
+        //////// Rainbow Six Siege end
 
-        public void GetSecondDataBasepPath()
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.ShowDialog();
-
-            SecondDataBaseFullPath = openFileDialog.FileName;
-        }
-
+        //////// Rainbow Six Siege start
         public async void SetR6SRegion()
         {
             if (String.IsNullOrWhiteSpace(SelectedR6SAccount))
@@ -96,23 +83,22 @@ namespace WPF_HackersList.ViewModels
                 return;
             }
 
-            R6SGameSettingsSplited[IndexOfDataCenterHintInRow] = String.Format("{0}={1}\r", "DataCenterHint", SelectedR6SRegion);
-            string gameSettingsFileText = null;
+            string gameSettingsNewFileText = null;
 
-            foreach (var text in R6SGameSettingsSplited)
-                gameSettingsFileText += text + "\n";
+            R6SGameSettings.R6SGameSettingsFileTextSplited[R6SGameSettings.R6SIndexOfDataCenterHintInRow] = String.Format("DataCenterHint={0}\r", SelectedR6SRegion);
 
-            using (StreamWriter streamWriter = new StreamWriter(R6SGameSettingsPath))            
-                await streamWriter.WriteAsync(gameSettingsFileText);
+            foreach (var text in R6SGameSettings.R6SGameSettingsFileTextSplited)
+                gameSettingsNewFileText += text + "\n";
+
+            using (StreamWriter streamWriter = new StreamWriter(R6SGameSettings.R6SAccountGameSettingsFilePath))            
+                await streamWriter.WriteAsync(gameSettingsNewFileText);
 
             MessageBox.Show($"Замена региона прошла успешно на {SelectedR6SRegion}", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);            
         }
 
         public void GetR6SData()
         {
-            var documents = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            R6SAccountsDirectory = String.Format("{0}\\{1}\\{2}", documents, "My Games", "Rainbow Six - Siege");
-            var rainbowSixSiegeAccounts = Directory.GetDirectories(R6SAccountsDirectory);
+            var rainbowSixSiegeAccounts = Directory.GetDirectories(R6SGameSettings.R6SAccountsDirectory);
 
             if (rainbowSixSiegeAccounts.Count() < 1)
             {
@@ -129,27 +115,28 @@ namespace WPF_HackersList.ViewModels
             R6SAccountsCollection = itemCollection;
         }
 
-        public async void GetR6SRegion()
+        public void GetR6SRegion()
         {
-            R6SGameSettingsPath = String.Format("{0}\\{1}\\{2}", R6SAccountsDirectory, SelectedR6SAccount, "GameSettings.ini");
-            string gameSettingsContent = null;
-
             if (String.IsNullOrWhiteSpace(SelectedR6SAccount))
                 return;
-            using(StreamReader streamReader = new StreamReader(R6SGameSettingsPath))            
-                gameSettingsContent = await streamReader.ReadToEndAsync();
 
-            R6SGameSettingsSplited = gameSettingsContent.Split("\n");
-            var gameSettingsNeededRow = R6SGameSettingsSplited.Where(x => x.Contains("DataCenterHint=") == true).SingleOrDefault();
+            R6SGameSettings.R6SAccountGameSettingsFilePath = String.Format("{0}\\{1}\\{2}", R6SGameSettings.R6SAccountsDirectory, SelectedR6SAccount, "GameSettings.ini");
 
-            IndexOfDataCenterHintInRow = R6SGameSettingsSplited.IndexOf(gameSettingsNeededRow);
-            SelectedR6SRegion = gameSettingsNeededRow.Split("=")[1].Trim();
+            SelectedR6SRegion = R6SGameSettings.R6SSelectedRegion;
         }
-            
+        ////////// Rainbow Six Siege end
 
-        public void GetSecondDataBase()
+        public void GetSecondDataBasePath()
         {
-            if (String.IsNullOrWhiteSpace(SecondDataBaseFullPath) && SecondDataBaseFullPath.Contains(".db", StringComparison.OrdinalIgnoreCase))
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.ShowDialog();
+
+            SecondDataBaseFullPath = openFileDialog.FileName;
+        }
+
+        public void GetSecondDataBasePeople()
+        {
+            if (String.IsNullOrWhiteSpace(SecondDataBaseFullPath) || !SecondDataBaseFullPath.Contains(".db", StringComparison.OrdinalIgnoreCase))
             {
                 MessageBox.Show("Поле не заполнено корректно", "Внимание", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;

@@ -31,8 +31,8 @@
             <WrapPanel>
                 <TextBlock Text="Полный путь к файлу:" VerticalAlignment="Center" MinHeight="{Binding Height, ElementName=GetSecondDataBase}"/>
                 <TextBox MinWidth="200" Text="{Binding Path=SecondDataBaseFullPath}"/>
-                <Button x:Name="GetSecondDataBasepPath" Content="..." Padding="10,3,10,3" />
-                <Button x:Name="GetSecondDataBase" Content="Добавить данные" Padding="10,3,10,3" Margin="10,0,10,0"/>
+                <Button x:Name="GetSecondDataBasePath" Content="..." Padding="10,3,10,3" />
+                <Button x:Name="GetSecondDataBasePeople" Content="Добавить данные" Padding="10,3,10,3" Margin="10,0,10,0"/>
             </WrapPanel>
 
             <GridSplitter Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1" MinHeight="3" Margin="0,10,0,10" HorizontalAlignment="Stretch" Background="Gray"/>
@@ -55,9 +55,13 @@
             <GridSplitter Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1" MinHeight="3" Margin="0,10,0,10" HorizontalAlignment="Stretch" Background="Gray"/>
 
             <WrapPanel>
-                <TextBlock Text="Ranibow Six Siege: регион "/>
+                <TextBlock Text="Ranibow Six Siege: Аккаунт: "/>
                 <ComboBox Name="R6SAccountsCollection" Text="{Binding Path=SelectedR6SAccount}">
                 </ComboBox>
+            </WrapPanel>
+
+            <WrapPanel>
+                <TextBlock Text="Регион "/>
                 <ComboBox Text="{Binding Path=SelectedR6SRegion}">
                     <Label Content="default"/>
                     <Label Content="eastus"/>
