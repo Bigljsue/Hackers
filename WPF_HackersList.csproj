@@ -9,9 +9,9 @@
     <AssemblyName>Hackers</AssemblyName>
     <Authors>Л.А.С</Authors>
     <Product>Л.А.С</Product>
-    <AssemblyVersion>1.2.7.0</AssemblyVersion>
-    <FileVersion>1.2.7.0</FileVersion>
-    <Version>1.2.7</Version>
+    <AssemblyVersion>1.2.8.0</AssemblyVersion>
+    <FileVersion>1.2.8.0</FileVersion>
+    <Version>1.2.8</Version>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 

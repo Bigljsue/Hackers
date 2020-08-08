@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -66,6 +67,21 @@ namespace WPF_HackersList.ViewModels
         public UCHackersListViewModel()
         {            
             UpdateDataGrid();
+        }
+
+        public void ShowProfileOfHacker() 
+        {
+            if (SelectedItem == null)
+            {
+                MessageBox.Show("Игрок не вибран в списке", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var personName = ((PersonModel)SelectedItem).Name;
+            Process process = new Process();
+            process.StartInfo.FileName = $"https://r6.tracker.network/profile/pc/{personName}";
+            process.StartInfo.UseShellExecute = true;
+            process.Start();
         }
 
         public void UpdateDataGrid()
