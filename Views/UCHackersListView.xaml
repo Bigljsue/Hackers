@@ -6,6 +6,12 @@
              xmlns:local="clr-namespace:WPF_HackersList.Views"
              mc:Ignorable="d" Background="Green"
              d:DesignHeight="450" >
+    <UserControl.Resources>
+        <Style x:Key="TextCenterAligment" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -21,7 +27,7 @@
                     <Button Name="RemovePerson" Content="Удалить" HorizontalAlignment="Right" Margin="{Binding Margin, ElementName=FilteredPeople}" Padding="10,0,10,0"/>
                 </WrapPanel>
 
-                <WrapPanel VerticalAlignment="Center">
+                <WrapPanel VerticalAlignment="Center" Background="Gray">
                     <Button Name="ShowProfileOfHacker" Content="Показать статистику" HorizontalAlignment="Right" Margin="{Binding Margin, ElementName=FilteredPeople}" Padding="10,0,10,0"/>
                     <Button Name="UpdateDataGrid" Content="Сохранить изменения" HorizontalAlignment="Right" Margin="{Binding Margin, ElementName=FilteredPeople}" Padding="10,0,10,0"/>
                 </WrapPanel>
@@ -34,8 +40,8 @@
                                         
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}" Width="Auto" IsReadOnly="True" />
-                <DataGridTextColumn Header="Ник в игре" Binding="{Binding Path=Name}" Width="Auto"/>
-                <DataGridTextColumn Header="Комментарий" Binding="{Binding Path=Comment}" MinWidth="300" />
+                <DataGridTextColumn Header="Ник в игре" Binding="{Binding Path=Name}" Width="Auto" ElementStyle="{StaticResource ResourceKey=TextCenterAligment}"/>
+                <DataGridTextColumn Header="Комментарий" Binding="{Binding Path=Comment}" MinWidth="300"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

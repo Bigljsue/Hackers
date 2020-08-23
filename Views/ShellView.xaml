@@ -18,16 +18,16 @@
             HorizontalAlignment="Center"
             Margin="10"  
             Width="95"
-            Height="65" >
+            Height="55" >
                 <Image Source="/Images/Hacker.png"/>
             </Button>
-            
+
             <Button 
             Name="LoadSettingsPage" 
-            HorizontalAlignment="Center"
-            Margin="10"  
-            Width="95"
-            Height="65" >
+            HorizontalAlignment="{Binding HorizontalAlignment, ElementName=LoadHackersListPage}"
+            Margin="{Binding Margin, ElementName=LoadHackersListPage}"  
+            Width="{Binding Width, ElementName=LoadHackersListPage}"
+            Height="{Binding Height, ElementName=LoadHackersListPage}" >
                 <Image Source="/Images/Settings.png"/>
             </Button>
         </StackPanel>
